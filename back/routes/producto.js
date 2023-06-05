@@ -5,6 +5,7 @@ var authenticate = require('../middlewares/aunthemticate');
 var multipart =  require ( 'connect-multiparty') ; 
 var path =  multipart ({uploadDir:'./uploads/productos' });
 var path_ingreso =  multipart ({uploadDir:'./uploads/facturas'});
+var path_galeria =  multipart ({uploadDir:'./uploads/galeria'});
 
 const axios = require('axios').default;
 
@@ -28,5 +29,13 @@ api.delete('/eliminar_variedad_producto/:id',authenticate.decodeToken,productoCo
 
 ///////////////////////////
 api.post('/registro_ingreso_admin',[authenticate.decodeToken,path_ingreso],productoController.registro_ingreso_admin);
+
+//////////////////////////////
+api.post('/subir_imagen_producto_admin',[authenticate.decodeToken,path_galeria],productoController.subir_imagen_producto_admin);
+
+api.get('/obtener_galeria_producto/:img',productoController.obtener_galeria_producto);
+api.get('/obtener_galeria_producto_admin/:id',authenticate.decodeToken,productoController.obtener_galeria_producto_admin);
+
 module.exports=api;
+
 

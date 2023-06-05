@@ -55,7 +55,26 @@
               </div>
   
   
-              <div class="mb-7">
+              
+
+              <template v-if="load_data">
+          <div class="row">
+            <div class="col-12 text-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden"> Loading
+
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+         </template>
+         
+              <template v-if="!load_data">
+                <div>
+                  <div class="mb-7">
                 <div class="row justify-content-between align-items-center">
                   <div class="col">
                     <div class="row align-items-center">
@@ -349,6 +368,8 @@
        
        
               </div>
+                </div>
+              </template>
   
   
   
@@ -364,13 +385,16 @@
   // @ is an alias to /src
   import Sidebar from '@/components/Sidebar.vue';
   import TopNav from '@/components/TopNav.vue';
+  import ErrorNotFound from '@/components/ErrorNotFound.vue';
   import axios from 'axios';
   
   export default {
     name: 'EditProductoApp',
     components: {
       Sidebar,
-      TopNav
+      TopNav,
+      ErrorNotFound
+      
   
     },
     //metodo que devuelve variables con sus valores
@@ -388,21 +412,32 @@
         portada: undefined,
         variedad:{},
         variedades:[],
+        data:false,
+        load_data:true,
       }
     },
   
     methods: {
 
         init_data(){
+          this.load_data=true;
         axios.get(this.$url+'/obtener_producto_admin/'+this.$route.params.id,{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': this.$store.state.token,
                 }
 }).then((result)=>{
-    //poenmos los datos del producto en los campos y la imagen que se va a editar
-    this.producto=result.data;
+  if(result.data == '')
+  {
+    this.data=false;
+  }else {
+        //poenmos los datos del producto en los campos y la imagen que se va a editar
+        this.producto=result.data;
     this.str_image = this.$url+'/obtener_portada_producto/'+this.producto.portada;
+
+  }
+  this.load_data=false;
+
 });
         },
       //metodo para cargar una imagen

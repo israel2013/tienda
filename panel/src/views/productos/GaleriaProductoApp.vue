@@ -53,9 +53,28 @@
            </div>
          </div>
 
-         <!--Vista de galeria -->
+         <template v-if="load_data">
+          <div class="row">
+            <div class="col-12 text-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden"> Loading
 
-                    <div class="mb-7">
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+         </template>
+
+
+         <template v-if="!load_data">
+
+          <div>
+              <!--Vista de galeria -->
+
+              <div class="mb-7" v-if="data">
                 <div class="row">
                     <div class="col-12 col-md-12">
 
@@ -71,8 +90,8 @@
 
                         <!-- Input -->
                         <div class="input-group mb-3">
-                            <input type="file" class="form-control" placeholder="Selecciona la imagen">
-                            <button class="btn btn-primary">
+                            <input type="file" id="input_file" class="form-control" placeholder="Selecciona la imagen" v-on:change="uploadImage($event)">
+                            <button class="btn btn-primary" v-on:click="subir_imagen()">
                                 <i class="fe fe-upload"></i>
                             </button>
                         </div>
@@ -86,11 +105,11 @@
                     
                 </div> <!-- / .row -->
 
-                <div class="row listAlias">
-                    <div class="col-12 col-md-6 col-xl-4">
+                <div class="row listAlias" v-if="!load_galeria">
+                    <div class="col-12 col-md-6 col-xl-4" v-for="item in galeria">
                         <div class="card">
                             <a href="project-overview.html">
-                                <img src="https://dashkit.goodthemes.co/assets/img/avatars/projects/project-1.jpg" alt="..." class="card-img-top">
+                                <img :src="$url+'/obtener_galeria_producto/'+item.imagen" alt="..." class="card-img-top">
                             </a>
                             <div class="card-footer card-footer-boxed">
                             <div class="row">
@@ -103,10 +122,32 @@
                         </div>
                     </div>
                     
+
+                </div>
+
+                <div class="row mt-5" v-if="load_galeria">
+                  <div class="col-12 text-center">
+                    <img src="/assets/img/reloj.gif" alt="" style="width: 80px;">
+                  </div>
+
                 </div>
 
             </div>
          <!--Vista de galeria-->
+
+                    <!--pegamos la vista del error-->
+                    <template v-if="!data">
+
+                        <div>
+                        <ErrorNotFound/>
+                        </div>
+                        </template>
+
+          </div>
+         </template>
+
+       
+
  
        </div>
      </div> <!-- / .row -->
@@ -120,13 +161,156 @@
    // @ is an alias to /src
    import Sidebar from '@/components/Sidebar.vue';
  import TopNav from '@/components/TopNav.vue';
+ import ErrorNotFound from '@/components/ErrorNotFound.vue';
+ import $ from "jquery";
+ import axios from 'axios';
   
    export default {
      name: 'GaleriaProductoApp',
      components: {
        Sidebar,
-       TopNav
+       TopNav,
+       ErrorNotFound
      
+     },
+     data(){
+      return {
+        imagen:undefined,
+        str_image:'',
+        data:false,
+        load_data:true,
+        load_galeria:true,
+        galeria:[],
+
+      }
+     },
+
+  
+     methods:{
+      init_data(){
+        this.load_data=true;
+        axios.get(this.$url+'/obtener_producto_admin/'+this.$route.params.id,{
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': this.$store.state.token,
+                }
+}).then((result)=>{
+    //poenmos los datos del producto en los campos y la imagen que se va a editar
+    console.log(result);
+    if(result.data == ''){
+      this.data=false;
+    }else{
+      //todo correcto
+      this.data=true;
+      this.producto=result.data;
+    this.str_image = this.$url+'/obtener_portada_producto/'+this.producto.portada;
+
+    }
+    this.load_data=false;
+
+});
+        },
+       //metodo para cargar una imagen
+    uploadImage($event) {
+      var image;
+      //si hay una imagen seleccionada
+      if ($event.target.files.length >= 1) {
+        //poenmos el valor de la imagen en una varibale
+        image = $event.target.files[0];
+      }
+      //console.log(image);
+      //validamos el tamaño de la imagen
+      if (image.size <= 1000000) {
+        //validamos que sea una imagen
+        if (image.type == 'image/jpeg' || image.type == 'image/png' || image.type == 'image/webp' || image.type == 'image/jpg') {
+          this.str_image = URL.createObjectURL(image);
+          this.imagen = image;
+        } else {
+          this.$notify({
+            group: 'foo',
+            title: 'ERROR',
+            text: 'El recurso debe ser una imagen',
+            type: 'error'
+          });
+          this.imagen=undefined;
+          $('#input_file').val('');
+        }
+      } else {
+        this.$notify({
+          group: 'foo',
+          title: 'ERROR',
+          text: 'El tamaño debe ser menor a 1 MB',
+          type: 'error'
+        });
+        this.imagen=undefined;
+        $('#input_file').val('');
+      }
+      console.log(this.imagen);
+    },
+    subir_imagen() {
+
+if(this.imagen == undefined){
+  this.$notify({
+              group: 'foo',
+              title: 'ERROR',
+              text: 'Selecciona una imagen a subir',
+              type: 'error'
+          });
+
+}else{
+  var fm = new FormData();
+fm.append('producto', this.$route.params.id);
+
+fm.append('imagen', this.imagen);//imagen de portada
+
+axios.post(this.$url + '/subir_imagen_producto_admin', fm, {
+  headers: {
+    'Content-Type': 'multipart/form-data',
+    'Authorization': this.$store.state.token,
+  }
+
+
+}).then((result) => {
+  if(result.data.message){
+          this.$notify({
+              group: 'foo',
+              title: 'ERROR',
+              text: result.data.message,
+              type: 'error'
+          });
+        }else{
+            this.$notify({
+              group: 'foo',
+              title: 'SUCCESS',
+              text: 'Se subio correctamente la imagen',
+              type: 'success'
+          });
+
+        }
+});
+
+}
+        },
+        init_galeria(){
+
+          this.load_galeria=true;
+        axios.get(this.$url+'/obtener_galeria_producto_admin/'+this.$route.params.id,{
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': this.$store.state.token,
+                }
+}).then((result)=>{
+    //poenmos los datos del producto en los campos y la imagen que se va a editar
+    console.log(result);
+    this.galeria=result.data;
+    this.load_galeria=false;
+
+});
+        },
+     },
+     beforeMount(){
+      this.init_data();
+      this.init_galeria();
      }
    }
    </script>

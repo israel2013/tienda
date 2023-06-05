@@ -51,7 +51,24 @@
            </div>
          </div>
 
-         <div class="row">
+         
+         <template v-if="load_data">
+          <div class="row">
+            <div class="col-12 text-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden"> Loading
+
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+         </template>
+         <template v-if="!load_data">
+          <div>
+            <div class="row">
 <div class="col-12 col-md-6">
 
 <!-- Last name -->
@@ -132,9 +149,10 @@
 </div>
 
 </div>
-</div>
+          </div>
 
-<hr class="my-5">
+
+            <hr class="my-5">
 
 <div class="row">
 
@@ -318,6 +336,14 @@
 Ingresar datos
 </button>
  
+          </div>
+         </template>
+
+         
+
+        
+
+
        </div>
      </div> <!-- / .row -->
    </div>
@@ -330,6 +356,7 @@ Ingresar datos
    // @ is an alias to /src
  import Sidebar from '@/components/Sidebar.vue';
  import TopNav from '@/components/TopNav.vue';
+ import ErrorNotFound from '@/components/ErrorNotFound.vue';
  import axios from 'axios';
  import currency_formatter from 'currency-formatter';
 
@@ -353,6 +380,8 @@ Ingresar datos
           productos: [],
           variedades:[],
           total:0,
+          data:false,
+          load_data:true,
       }
      },
 
@@ -397,6 +426,7 @@ Ingresar datos
 
     },
     init_productos(){
+      this.load_data=true;
 
       this.productos=[];
       axios.get(this.$url+'/listar_activos_productos_admin',{
@@ -405,12 +435,19 @@ Ingresar datos
           'Authorization': this.$store.state.token,
         }
       }).then((result)=>{
-        for(var item of result.data){
+        if(result.data == '')
+        {
+          this.data = false;
+
+        }else{
+          for(var item of result.data){
           this.productos.push({
             value:item._id,
             text:item.titulo
           });
         }
+        }
+      this.load_data=false;
       });
     },
 
@@ -605,6 +642,7 @@ Ingresar datos
      components: {
        Sidebar,
        TopNav,
+       ErrorNotFound
        //VueSelect,
       // BasicSelect,
 
