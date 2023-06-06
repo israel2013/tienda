@@ -10,8 +10,9 @@ import { ModalPlugin } from 'bootstrap-vue'
 Vue.config.productionTip = false
 //variable global
 Vue.prototype.$url='http://localhost:4201/api';
-Vue.prototype.$ganancia = 30;
 Vue.prototype.$token=localStorage.getItem('token');
+Vue.prototype.$ganancia = 30;
+
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import "vue-select/dist/vue-select.css";

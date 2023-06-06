@@ -1,8 +1,13 @@
+//var Cliente = require = ('../models/cliente');
+var Cliente= require('../models/cliente');
 
-const testing = async function(req,res){
-res.status(200).send('Hola testing 3');
+const registro_cliente_ecommerce = async function(req,res){
+    //no se necesita validar un token porque es una vista publica
+    let data = req.body;
+    let cliente = await Cliente.create(data);
+    res.status(200).send(cliente);
 }
 
 module.exports={
-    testing
+    registro_cliente_ecommerce
 }
