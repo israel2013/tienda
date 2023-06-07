@@ -11,6 +11,7 @@ Vue.config.productionTip = false
 //variable global
 Vue.prototype.$url='http://localhost:4201/api';
 Vue.prototype.$token=localStorage.getItem('token');
+Vue.prototype.$categorias = ['Musica','Celulares','Computadoras'];
 Vue.prototype.$ganancia = 30;
 
 

@@ -48,17 +48,18 @@
           <!-- Navbar Collapse -->
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mx-auto">
-              <li class="nav-item"><a class="nav-link" href="">Inicio</a>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/">
+                  Inicio
+                </router-link>
               </li>
-              <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" id="categoryDropdownMenuLink" href="category.html" data-bs-target="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Departamentos</a>
-                  <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="categoryDropdownMenuLink">
-                      <a class="dropdown-item" href="category.html">Category - left sidebar </a><a class="dropdown-item" href="category-right.html">Category - right sidebar </a>
-                      <a class="dropdown-item" href="category-no-sidebar.html">Category - no sidebar </a><a class="dropdown-item" href="category-full.html">Category - full width </a>
-                      <a class="dropdown-item" href="category-masonry.html">Category - masonry items </a><a class="dropdown-item" href="category-banner.html">Category - w/ banner </a><a class="dropdown-item" href="detail.html">Product detail </a>
-                      <a class="dropdown-item" href="detail-2.html">Product detail - v.2 </a><a class="dropdown-item" href="detail-3.html">Product detail - v.3 <span class="badge badge-warning ms-1">New</span> </a>
-                  </div>
+
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{name:'tienda'}">
+                  Tienda
+                </router-link>
               </li>
+        
               <!-- Megamenu-->
               <li class="nav-item dropdown position-static"><a class="nav-link dropdown-toggle " href="#" data-bs-toggle="dropdown">Categorias</a>
                 <div class="dropdown-menu dropdown-menu-animated megamenu py-lg-0">
@@ -211,10 +212,11 @@
                 </div>
                 <!-- User Not Logged - link to login page-->
                 <div class="nav-item">
-                    <a class="navbar-icon-link" href="customer-login.html">
-                        <img src="/assets/icons/user.png" style="width: 25px;" />
+                    <router-link class="navbar-icon-link" to="/login">
+                      <img src="/assets/icons/user.png" style="width: 25px;" />
                         <span class="text-sm ms-2 ms-lg-0 text-uppercase text-sm fw-bold d-none d-sm-inline d-lg-none">Log in </span>
-                    </a>
+                   
+                    </router-link>
                 </div>
                 <!-- Cart Dropdown-->
                 <div class="nav-item dropdown">

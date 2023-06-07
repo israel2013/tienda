@@ -109,7 +109,7 @@
 
                 <div class="row">
                  
-                  <div class="col-12 col-md-6">
+                  <div class="col-12 col-md-12">
                     <!-- Email address -->
                     <div class="form-group">
                       <!-- Label -->
@@ -140,9 +140,30 @@
                       <!-- Input -->
                       <select name="" class="form-select" v-model="producto.categoria">
                         <option value="" disabled selected>Seleccionar</option>
-                        <option value="Categoria 1">Categoria 1</option>
-                        <option value="Categoria 2">Categoria 2</option>
-                        <option value="Categoria 3">Categoria 3</option>
+                        <option :value="item" v-for="item in $categorias">{{ item }}</option>
+                      </select>
+                    </div>
+                  </div>
+
+
+
+
+                  <div class="col-12 col-md-6">
+                    <!-- First name -->
+                    <div class="form-group">
+                      <!-- Label -->
+                      <label class="form-label">
+                        Subcategoria
+                      </label>
+                         <!-- Form text -->
+                      <small class="form-text text-muted">
+                        This contact will be shown to others publicly, so choose it carefully.
+                      </small>
+                      <!-- Input -->
+                      <select name="" class="form-select" v-model="producto.subcategoria">
+                        <option value="" disabled selected>Seleccionar</option>
+                        <option :value="item" v-for="item in subcategorias">{{ item }}</option>
+
                       </select>
                     </div>
                   </div>
@@ -298,7 +319,7 @@
 </div>
 
 <div class="card">
-    <div class="card-body">
+    <div class="card-body" v-if="variedades.length >=1">
 
         <!-- List group -->
         <div class="list-group list-group-flush my-n3">
@@ -359,6 +380,20 @@
         </div>
 
     </div>
+
+    <div class="card-body" v-if="variedades.length == 0">
+      <div class="row">
+        <div class="col-12 text-center">
+          <img src="/assets/img/reloj.gif" alt="" style="width:80px">
+
+        </div>
+
+
+
+      </div>
+    
+
+    </div>
 </div>
 
                 <!--Variedades-->
@@ -408,10 +443,12 @@
           estado: false,
           descuento: false,
           portada: undefined,
+          subcategoria:''
         },
         portada: undefined,
         variedad:{},
         variedades:[],
+        subcategorias:['Rock','pop','Indie','Rap','Gama alta','Gama baja'],
         data:false,
         load_data:true,
       }
@@ -500,7 +537,16 @@
             type: 'error'
           });
   
-        }  else if (!this.producto.extracto) {
+        } else if (!this.producto.subcategoria) {
+  
+          this.$notify({
+            group: 'foo',
+            title: 'ERROR',
+            text: 'Seleccione la subcategoria del producto',
+            type: 'error'
+          });
+
+      } else if (!this.producto.extracto) {
   
           this.$notify({
             group: 'foo',
@@ -540,6 +586,7 @@
             data = new FormData();
             data.append('titulo',this.producto.titulo);
             data.append('categoria',this.producto.categoria);
+            data.append('subcategoria',this.producto.subcategoria);
           data.append('extracto',this.producto.extracto);
             data.append('estado',this.producto.estado);
           data.append('str_variedad',this.producto.str_variedad);

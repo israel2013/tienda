@@ -10,7 +10,9 @@ const routes = [
     name: 'home',
     component: HomeView
   },
-  {path: '/login',name: 'login',component:()=> import('@/views/LoginApp.vue')},
+  {path:'/login',name:'login',component:()=> import('@/views/LoginApp.vue')},
+  {path:'/tienda',name:'tienda',component:()=> import('@/views/productos/IndexProductoApp.vue')},
+
 
 ]
 
