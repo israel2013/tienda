@@ -13,7 +13,15 @@ const obtener_productos_recomendados = async function(req,res){
     var productos = await Producto.find({estado:true}).limit(6);
     res.status(200).send(productos);
 }
+
+const obtener_productos_tienda = async function(req,res){
+
+    //obtener los productos 
+    var productos = await Producto.find({estado:true}).sort({createdAt:-1});
+    res.status(200).send(productos);
+}
 module.exports = {
     obtener_nuevos_productos,
-    obtener_productos_recomendados
+    obtener_productos_recomendados,
+    obtener_productos_tienda
 }

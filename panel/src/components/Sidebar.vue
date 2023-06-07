@@ -101,6 +101,12 @@
           <ul class="navbar-nav m-md-4">
             <li class="nav-item">
             
+            <router-link to="/categorias" class="nav-link" active-class="active">
+              <i class="fe fe-tag"></i> Categorias
+            </router-link>
+          </li>
+            <li class="nav-item">
+            
             <router-link to="/producto/create" class="nav-link" active-class="active">
               <i class="fe fe-shopping-cart"></i> Productos
             </router-link>
