@@ -260,7 +260,7 @@
                             <div class="navbar-cart-total"><span class="text-uppercase text-muted">Total</span><strong class="text-uppercase">{{convertCurrency(total)}}</strong></div>
                             <!-- buttons-->
                             <div class="d-flex justify-content-between">
-                                <router-link class="btn btn-link text-dark me-3" to="/cart" href="cart.html">Carrito de compras 
+                                <router-link class="btn btn-link text-dark me-3" to="/send_cart" href="cart.html">Carrito de compras 
                                   <img src="/assets/icons/shopping-bag.png" style="width: 15px;">
                                 </router-link>
                                 <router-link to="/checkout" class="btn btn-outline-dark" >Checkout</router-link>

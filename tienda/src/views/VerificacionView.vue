@@ -146,7 +146,7 @@ export default {
                 }
             }).then((result)=>{
                 console.log(result);
-                //REDIRECCION
+                this.$router.push({name:'venta',params:{id:result.data._id}});
                 this.$socket.emit('send_cart',true);
             });
         },
