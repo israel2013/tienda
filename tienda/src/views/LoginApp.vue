@@ -7,7 +7,7 @@
                 
                 <!-- Hero Content-->
                 <div class="hero-content pb-5 text-center">
-                    <h1 class="hero-heading mb-0">Customer zone</h1>
+                    <h1 class="hero-heading mb-0">Cliente</h1>
                 </div>
             </div>
         </section>
@@ -103,6 +103,12 @@ export default {
                     msm_error_login:'',
                 }
     },
+
+    beforeMount(){
+        if(this.$store.state.token){
+            this.$router.push({name:'home'})
+        }
+    },
     methods:{
         validar_registro(){
             if(!this.cliente.nombres){
@@ -167,9 +173,11 @@ export default {
 
                             //almacenamos el token y el objeto usuario
                             this.$store.dispatch('saveToken',result.data.token);
+                            this.$store.dispatch('saveUser',JSON.stringify(result.data.cliente));
                              //nos redirigimos a otra pagina 
                             this.$router.push({name:'home'});
                             // console.log(result);
+                            this.$socket.emit('send_cart',true);
                         }
 
                     
@@ -178,6 +186,7 @@ export default {
                     });
                             }
         },
+     
     },
 }
 </script>

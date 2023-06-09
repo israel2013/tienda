@@ -86,12 +86,11 @@
             </div>
           </div>
           <p class="mb-4 text-muted">{{producto.extracto}}</p>
-          <form action="#">
-            <div class="row">
+          <div class="row">
               <div class="col-sm-6 col-lg-12 detail-option mb-3">
                 <h6 class="detail-option-heading">{{producto.str_variedad}}</h6>
-                <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" :for="'variedad_'+item._id" v-for="item in variedades"> {{item.variedad}}
-                  <input class="input-invisible" type="radio" name="size" value="value_0" :id="'variedad_'+item._id" required>
+                <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" :id="'variedad_'+item._id" :for="'variedad_'+item._id" v-for="item in variedades" v-on:click="getVariedad(item._id)"> {{item.variedad}}
+                  <input class="input-invisible" type="radio" name="size" :value="item._id" :id="'variedad_'+item._id" required>
                 </label>
                 
               </div>
@@ -119,16 +118,17 @@
               </div> -->
               <div class="col-12 col-lg-6 detail-option mb-5">
                 <label class="detail-option-heading fw-bold">Cantidad</label>
-                <input class="form-control detail-quantity" name="items" type="number" value="1">
+                <input class="form-control detail-quantity" name="items" type="number" v-model="obj_carrito.cantidad">
               </div>
             </div>
             <ul class="list-inline">
               <li class="list-inline-item">
-                <button class="btn btn-dark btn-lg mb-1" type="submit">Agregar al carrito</button>
+                <button class="btn btn-dark btn-lg mb-1" type="button" v-on:click="add_cart()">Agregar al carrito</button>
               </li>
               <!-- <li class="list-inline-item"><a class="btn btn-outline-secondary mb-1" href="#"> <i class="far fa-heart me-2"></i>Add to wishlist</a></li> -->
             </ul>
-          </form>
+
+            <span class="text-danger" v-if="msm_error">{{msm_error}}</span>
         </div>
       </div>
     </div>
@@ -272,24 +272,23 @@
       <div class="row">
         <!-- product-->
         <div class="col-lg-2 col-md-4 col-6" v-for="item in productos_relaciones">
-          <router-link :to="{name:'show-producto',params:{slug:item.slug}}">
-          
+          <router-link :to="{name: 'show-producto',params:{slug: item.slug}}">
             <div class="product">
-            <div class="product-image">
-              <div class="ribbon ribbon-danger" v-if="item.descuento">Oferta</div>
-              <img class="img-fluid" :src="$url+'/obtener_portada_producto/'+item.portada" alt="product"/>
-              <div class="product-hover-overlay">
-                <a class="product-hover-overlay-link" href="detail.html"></a>
+              <div class="product-image">
+                <div class="ribbon ribbon-danger" v-if="item.descuento">Oferta</div>
+                <img class="img-fluid" :src="$url+'/obtener_portada_producto/'+item.portada" alt="product"/>
+                <div class="product-hover-overlay">
+                  <a class="product-hover-overlay-link" href="detail.html"></a>
+                </div>
+              </div>
+              <div class="py-2">
+                <p class="text-muted text-sm mb-1">{{item.categoria}}</p>
+                <h3 class="h6 text-uppercase mb-1" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;" :title="item.titulo">
+                  <a class="text-dark" href="detail.html">{{item.titulo}}</a>
+                </h3>
+                <span class="text-muted">{{convertCurrency(item.precio)}}</span>
               </div>
             </div>
-            <div class="py-2">
-              <p class="text-muted text-sm mb-1">{{item.categoria}}</p>
-              <h3 class="h6 text-uppercase mb-1" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;" :title="item.titulo">
-                <a class="text-dark" href="detail.html">{{item.titulo}}</a>
-              </h3>
-              <span class="text-muted">{{convertCurrency(item.precio)}}</span>
-            </div>
-          </div>
           </router-link>
           
         </div>
@@ -306,6 +305,11 @@
   border-color: #fff #fff #343a40 !important;
   background: #005f96 !important;
 }
+.bg_variedad{
+background: #005f96 !important;
+color: white !important;
+border:none !important
+}
 </style>
 
 <script>
@@ -313,6 +317,7 @@ import { init_carousel } from '../../../public/assets/js/theme.d7b4a888.js';
 import currency_formatter from 'currency-formatter';
 import axios from 'axios';
 import moment from 'moment';
+import $ from 'jquery';
 
 
 export default {
@@ -323,6 +328,11 @@ export default {
       variedades: [],
       producto: {},
       productos_relaciones: [],
+      obj_carrito : {
+        cantidad: 1
+      },
+      user_data : JSON.parse(this.$store.state.user),
+      msm_error : '',
     }
   },
   methods: {
@@ -336,6 +346,10 @@ export default {
           }
       }).then((result)=>{
         this.producto = result.data.producto;
+
+        this.obj_carrito.producto = this.producto._id;
+        this.obj_carrito.cliente = this.user_data._id;
+
         this.variedades = result.data.variedades;
         this.galeria = result.data.galeria;
         this.init_productos_relacionados(this.producto.categoria);
@@ -353,12 +367,44 @@ export default {
     },
     convertDate(date){
       return moment(date).format('YYYY-MM-DD');
-    }
+    },
+    getVariedad(value){
+      this.obj_carrito.variedad = value;
+      setTimeout(() => {
+        $('.detail-option-btn-label').removeClass('bg_variedad');
+        $('#variedad_'+value).addClass('bg_variedad');
+      }, 50);
+    },
+    add_cart(){
+      if(!this.obj_carrito.variedad){
+       this.msm_error = 'Seleccione la variedad';
+      }else if(!this.obj_carrito.cantidad){
+       this.msm_error = 'Ingrese la cantidad';
+      }else if(this.obj_carrito.cantidad <= 0){
+       this.msm_error = 'Ingrese una cantidad válida';
+      }else{
+        this.msm_error = '';
+        axios.post(this.$url+'/crear_producto_carrito',this.obj_carrito,{
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization':this.$store.state.token
+          }
+      }).then((result)=>{
+        console.log(result);
+        this.$socket.emit('send_cart',true);
+      });
+
+
+
+      }
+
+    } 
   },
   beforeMount() {
     init_carousel.init_galeria();
     init_carousel.init_zoom();
     this.init_data();
+  
   },
 }
 </script>
