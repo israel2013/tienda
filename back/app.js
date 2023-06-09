@@ -2,9 +2,13 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyparser = require('body-parser');
-var port = process.env.port || 4201;
+var port = process.env.port || 4201;//aqui lo pudo poner '0.0.0.0' para que netlify detecte que no es valido y lo haga automaticamente
+var host = process.env.DB_URI || "mongodb://127.0.0.1:27017/tienda";
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+//IMPORTR VARIABLES DE ENTORNO LOCALES
+require('dotenv').config({path: '../.env'});
+
 
 var app = express();
 
@@ -33,7 +37,8 @@ app.use(bodyparser.json({limit: '50mb', extended: true}));
 
 
 //conexion a la base de datos
-mongoose.connect('mongodb://127.0.0.1:27017/tienda',{
+//mongoose.connect('mongodb://127.0.0.1:27017/tienda',{
+    mongoose.connect(host,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
     //useFindAndModify:true,
@@ -59,6 +64,14 @@ httpServer.listen(port,function(){
     console.log('Servidor correindo '+port);
 
 });
+
+/*
+//Añado esto para el servidor
+app.listen(port,host,() =>{
+    console.log('Servidor funcionando ');
+
+});
+*/
 
 //permite el tranpaso de datos de un servidor a nuestro backend 
 app.use((req,res,next)=>{
