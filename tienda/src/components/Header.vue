@@ -218,7 +218,7 @@
                         </span>
                         <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="categoryDropdownMenuLink" style="    left: -50px !important;">
                             <a class="dropdown-item" href="category.html">Category - left sidebar   </a>
-                            <a class="dropdown-item" href="category-right.html">Category - right sidebar   </a>
+                            <router-link class="dropdown-item" to="/cuenta/direcciones">Direcciones</router-link>
                             <a class="dropdown-item" v-on:click="logout()">Cerrar sesión   </a>
                         </div>
                     </a>
@@ -260,10 +260,10 @@
                             <div class="navbar-cart-total"><span class="text-uppercase text-muted">Total</span><strong class="text-uppercase">{{convertCurrency(total)}}</strong></div>
                             <!-- buttons-->
                             <div class="d-flex justify-content-between">
-                                <a class="btn btn-link text-dark me-3" href="cart.html">View Cart 
+                                <router-link class="btn btn-link text-dark me-3" to="/cart" href="cart.html">Carrito de compras 
                                   <img src="/assets/icons/shopping-bag.png" style="width: 15px;">
-                                </a>
-                                <a class="btn btn-outline-dark" href="checkout1.html">Checkout</a>
+                                </router-link>
+                                <router-link to="/checkout" class="btn btn-outline-dark" >Checkout</router-link>
                             </div>
                         </div>
                     </div>

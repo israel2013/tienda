@@ -76,12 +76,12 @@
             <div class="d-flex align-items-center">
               <ul class="list-inline me-2 mb-0">
                 <li class="list-inline-item me-0">
-                  <img src="/assets/icons/estrella.png" style="width:15px" alt="">
+                  <img src="/assets/icons/star.png" style="width:15px" alt="">
                 </li>
-                <li class="list-inline-item me-0"><img src="/assets/icons/estrella.png" style="width:15px" alt=""></li>
-                <li class="list-inline-item me-0"><img src="/assets/icons/estrella.png" style="width:15px" alt=""></li>
-                <li class="list-inline-item me-0"><img src="/assets/icons/estrella.png" style="width:15px" alt=""></li>
-                <li class="list-inline-item me-0"><img src="/assets/icons/estrella.png" style="width:15px" alt=""></li>
+                <li class="list-inline-item me-0"><img src="/assets/icons/star.png" style="width:15px" alt=""></li>
+                <li class="list-inline-item me-0"><img src="/assets/icons/star.png" style="width:15px" alt=""></li>
+                <li class="list-inline-item me-0"><img src="/assets/icons/star.png" style="width:15px" alt=""></li>
+                <li class="list-inline-item me-0"><img src="/assets/icons/star.png" style="width:15px" alt=""></li>
               </ul><span class="text-muted text-uppercase text-sm">25 reviews</span>
             </div>
           </div>
